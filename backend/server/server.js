@@ -6,28 +6,29 @@ import dotenv from "dotenv";
 import router from "../routes/router.js";
 import connectDB from "../../config/MONGODB.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.resolve("../.env") });
+
+dotenv.config(); // ✅ loads .env automatically
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use("/api", router);
-
 connectDB();
 
-// ✅ Serve Vite build in production
-if (process.env.NODE_ENV === "production") {
-  const distPath = path.resolve(__dirname, "../../dist");
-  app.use(express.static(distPath));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-  // ✅ Fix: use "(.*)" instead of "*"
-  app.get("(.*)", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+app.use("/api", router);
+
+//  Serve frontend only in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../dist")));
+
+  // ✅ Universal route — Express v5 safe
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "../dist", "index.html"));
   });
 }
 
