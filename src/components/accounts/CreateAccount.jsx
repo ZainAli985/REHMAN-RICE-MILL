@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import API_BASE_URL from "../../../config/API_BASE_URL";
+import API_BASE_URL from "../../../config/API_BASE_URL.js";
 import Notification from "../Notification.jsx";
 import SidebarLayout from "../layout/SidebarLayout.jsx";
 
