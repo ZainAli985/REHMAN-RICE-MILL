@@ -11,5 +11,8 @@ router.get("/get-accounts", getAccounts);
 router.post("/create-journal-entry", createGeneralEntry);
 router.get("/get-journal-entries", getGeneralEntries);
 router.delete("/delete-journal-entry/:id", deleteGeneralEntry);
+router.get('/', (req,res)=>{
+    res.send('HELLO WORLD');
+});
 
 export default router;
