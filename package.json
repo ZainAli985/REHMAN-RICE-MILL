@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node backend/server/server.js",
-    "build": "cd frontend && npm run build"
+    "start": "node backend/server/server.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.16",
