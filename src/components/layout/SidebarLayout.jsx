@@ -8,7 +8,10 @@ import {
   FiBook,
   FiFileText,
   FiLayers,
+  FiBookOpen,
 } from "react-icons/fi";
+import { FaRegFileAlt } from "react-icons/fa";
+import { MdLibraryBooks } from "react-icons/md";
 
 export default function SidebarLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +23,7 @@ export default function SidebarLayout({ children }) {
     { to: "/dashboard", label: "Dashboard", icon: <FiHome /> },
     { to: "/create-account", label: "Create Account", icon: <FiUser /> },
     { to: "/view-accounts", label: "View Accounts", icon: <FiBook /> },
+    { to: "/ledger", label: "Ledger", icon: <MdLibraryBooks /> },
     { to: "/add-invoice", label: "Create Invoice", icon: <FiFileText /> },
     { to: "/general-entries", label: "General Entries", icon: <FiLayers /> },
   ];
@@ -28,9 +32,8 @@ export default function SidebarLayout({ children }) {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-gray-900 text-white transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 md:translate-x-0 z-50`}
+        className={`fixed top-0 left-0 h-full w-64 bg-gray-900 text-white transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 md:translate-x-0 z-50`}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700">
           <h1 className="text-xl font-bold tracking-wide">ADMIN PANEL</h1>
@@ -47,9 +50,8 @@ export default function SidebarLayout({ children }) {
             <Link
               key={link.to}
               to={link.to}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition ${
-                location.pathname === link.to ? "bg-gray-800" : ""
-              }`}
+              className={`flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition ${location.pathname === link.to ? "bg-gray-800" : ""
+                }`}
               onClick={() => setIsOpen(false)}
             >
               <span className="text-lg">{link.icon}</span>
