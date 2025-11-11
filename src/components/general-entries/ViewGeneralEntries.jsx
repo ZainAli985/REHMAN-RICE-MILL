@@ -6,6 +6,9 @@ import Notification from "../Notification.jsx";
 
 export default function ViewGeneralEntries() {
   const [entries, setEntries] = useState([]);
+  const [filteredEntries, setFilteredEntries] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState("all");
   const [loading, setLoading] = useState(true);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [notificationType, setNotificationType] = useState("");
@@ -24,18 +27,13 @@ export default function ViewGeneralEntries() {
   const fetchEntries = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/get-journal-entries`);
-
       const data = await safeJsonParse(res);
 
-      if (!res.ok) {
-        const message =
-          (data && data.message) ||
-          `Server returned ${res.status} ${res.statusText}`;
-        throw new Error(message);
-      }
-
+      if (!res.ok) throw new Error(data?.message || "Failed to fetch entries");
       if (!data) throw new Error("Invalid JSON from server");
+
       setEntries(data);
+      setFilteredEntries(data);
     } catch (error) {
       console.error("Error fetching entries:", error);
       setNotificationMessage(error.message);
@@ -45,9 +43,51 @@ export default function ViewGeneralEntries() {
     }
   };
 
+  // ✅ Fetch all accounts
+  const fetchAccounts = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/get-accounts`);
+      const data = await safeJsonParse(res);
+
+      if (!res.ok) throw new Error(data?.message || "Failed to fetch accounts");
+      if (!data) throw new Error("Invalid JSON from server");
+
+      setAccounts(data);
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+      setNotificationMessage(error.message);
+      setNotificationType("error");
+    }
+  };
+
   useEffect(() => {
     fetchEntries();
+    fetchAccounts();
   }, []);
+
+  // ✅ Handle filter
+  const handleAccountFilter = (accountId) => {
+    setSelectedAccount(accountId);
+
+    if (accountId === "all") {
+      setFilteredEntries(entries);
+      return;
+    }
+
+    const filtered = entries.filter((entry) => {
+      const debitMatch =
+        entry.debitAccount?._id === accountId ||
+        entry.debitAccount === accountId;
+
+      const creditMatch = entry.creditEntries?.some(
+        (c) => c.account?._id === accountId || c.account === accountId
+      );
+
+      return debitMatch || creditMatch;
+    });
+
+    setFilteredEntries(filtered);
+  };
 
   // ✅ Delete journal entry
   const handleDelete = async (id) => {
@@ -63,14 +103,10 @@ export default function ViewGeneralEntries() {
 
       const data = await safeJsonParse(res);
 
-      if (!res.ok) {
-        const message =
-          (data && data.message) ||
-          `Server returned ${res.status} ${res.statusText}`;
-        throw new Error(message);
-      }
+      if (!res.ok) throw new Error(data?.message || "Delete failed");
 
       setEntries((prev) => prev.filter((entry) => entry._id !== id));
+      setFilteredEntries((prev) => prev.filter((entry) => entry._id !== id));
       setNotificationMessage(data?.message || "Entry deleted successfully!");
       setNotificationType("success");
     } catch (error) {
@@ -98,6 +134,23 @@ export default function ViewGeneralEntries() {
         </Link>
       </div>
 
+      {/* Filter Bar */}
+      <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg p-4 mb-6 flex flex-col md:flex-row gap-4 md:items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-700">Filter by Account</h3>
+        <select
+          value={selectedAccount}
+          onChange={(e) => handleAccountFilter(e.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
+        >
+          <option value="all">All Accounts</option>
+          {accounts.map((acc) => (
+            <option key={acc._id} value={acc._id}>
+              {acc.accountName}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Entries Table */}
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-6 md:p-8">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
@@ -106,9 +159,9 @@ export default function ViewGeneralEntries() {
 
         {loading ? (
           <div className="text-center text-gray-600 py-10">Loading entries...</div>
-        ) : entries.length === 0 ? (
+        ) : filteredEntries.length === 0 ? (
           <div className="text-center text-gray-600 py-10">
-            No journal entries found.
+            No journal entries found for this account.
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -136,7 +189,7 @@ export default function ViewGeneralEntries() {
                 </tr>
               </thead>
               <tbody>
-                {entries.map((entry) => (
+                {filteredEntries.map((entry) => (
                   <tr
                     key={entry._id}
                     className="border-t border-gray-200 hover:bg-gray-50 transition"

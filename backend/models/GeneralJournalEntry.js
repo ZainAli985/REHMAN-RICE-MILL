@@ -19,6 +19,7 @@ const generalJournalEntrySchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: "",
+      required: true,
     },
     comments: {
       type: String,

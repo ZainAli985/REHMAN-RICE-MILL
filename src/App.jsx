@@ -9,7 +9,11 @@ import CreateAccount from './components/accounts/CreateAccount';
 import ViewAccounts from './components/accounts/ViewAccounts';
 import GeneralJournalEntry from './components/general-entries/GeneralJournalEntry';
 import ViewGeneralEntries from './components/general-entries/ViewGeneralEntries';
-import Invoice from './components/invoices/Invoice';
+import ViewSalesInvoices from './components/invoices/ViewSalesInvoices';
+import InvoiceDashboard from './components/invoices/InoviceDashboard';
+import SalesInvoice from './components/invoices/SalesInvoice.jsx';
+import PurchaseInvoiceForm from './components/invoices/PurchaseInvoiceForm.jsx';
+import ViewPurchaseInvoices from './components/invoices/ViewPurchaseInvoices.jsx';
 
 function App() {
 
@@ -24,7 +28,11 @@ function App() {
     <Route path='/general-entries' element= {<GeneralJournalEntry/>} />
     <Route path='/general-journal-entry' element= {<GeneralJournalEntry/>} />
     <Route path='/view-general-entries' element= {<ViewGeneralEntries/>} />
-    <Route path='/add-invoice' element= {<Invoice/>} />
+    <Route path='/add-invoice' element= {<InvoiceDashboard/>} />
+    <Route path='/add-invoice-sales' element= {<SalesInvoice/>} />
+    <Route path='/view-sales-invoices' element= {<ViewSalesInvoices/>} />
+    <Route path='/add-invoice-purchase' element= {<PurchaseInvoiceForm/>} />
+    <Route path='/view-purchase-invoices' element= {<ViewPurchaseInvoices/>} />
       </Routes>
       </BrowserRouter>
     </>
