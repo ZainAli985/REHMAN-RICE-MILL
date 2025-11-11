@@ -29,7 +29,7 @@ const Notification = ({ message, type = "info", onClose }) => {
   return (
     <div
       key={key}
-      className={`${colorMap[type]} fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-500 z-[9999]`}
+      className={`${colorMap[type]} fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-500 z-9999`}
     >
       {message}
     </div>

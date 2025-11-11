@@ -93,7 +93,7 @@ export default function SidebarLayout({ children }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-grow p-6">{children}</main>
+        <main className="grow p-6">{children}</main>
       </div>
     </div>
   );
