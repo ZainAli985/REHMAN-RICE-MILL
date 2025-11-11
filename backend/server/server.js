@@ -25,7 +25,7 @@ const distPath = path.resolve(__dirname, "../../dist");
 app.use(express.static(distPath));
 
 // ✅ Serve index.html directly from / (no wildcard)
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 
